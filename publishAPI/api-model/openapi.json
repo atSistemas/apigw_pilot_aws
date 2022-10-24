@@ -1,0 +1,636 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "API Pilot",
+        "description": "API Pilot",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "",
+            "description": "Endpoint AWS API Pilot"
+        }
+    ],
+    "x-amazon-apigateway-request-validators": {
+        "all": {
+            "validateRequestBody": true,
+            "validateRequestParameters": true
+        },
+        "params-only": {
+            "validateRequestBody": false,
+            "validateRequestParameters": true
+        }
+    },
+    "x-amazon-apigateway-gateway-responses": {
+        "BAD_REQUEST_BODY": {
+            "statusCode": 400,
+            "responseParameters": {
+                "gatewayresponse.header.Access-Control-Allow-Methods": "'*'",
+                "gatewayresponse.header.Access-Control-Allow-Origin": "'*'",
+                "gatewayresponse.header.Access-Control-Allow-Headers": "'*'"
+
+            },
+            "responseTemplates": {
+                "application/json": "{\"message\":\"$context.error.validationErrorString\"}"
+            }
+        },
+        "BAD_REQUEST_PARAMETERS": {
+            "statusCode": 400,
+            "responseParameters": {
+                "gatewayresponse.header.Access-Control-Allow-Methods": "'*'",
+                "gatewayresponse.header.Access-Control-Allow-Origin": "'*'",
+                "gatewayresponse.header.Access-Control-Allow-Headers": "'*'"
+            },
+            "responseTemplates": {
+                "application/json": "{\"message\":\"$context.error.validationErrorString\"}"
+            }
+        },
+        "DEFAULT_5XX": {
+            "statusCode": null,
+            "responseParameters": {
+                "gatewayresponse.header.Access-Control-Allow-Methods": "'*'",
+                "gatewayresponse.header.Access-Control-Allow-Origin": "'*'",
+                "gatewayresponse.header.Access-Control-Allow-Headers": "'*'"
+            },
+            "responseTemplates": {
+                "application/json": "{\"message\":\"$context.error.message\"}"
+            }
+        },
+        "DEFAULT_4XX": {
+            "statusCode": null,
+            "responseParameters": {
+                "gatewayresponse.header.Access-Control-Allow-Methods": "'*'",
+                "gatewayresponse.header.Access-Control-Allow-Origin": "'*'",
+                "gatewayresponse.header.Access-Control-Allow-Headers": "'*'"
+            },
+            "responseTemplates": {
+                "application/json": "{\"message\":\"$context.error.message\"}"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Operations",
+            "description": "Set of operations that make up the pilot api."
+        }
+    ],
+    "x-amazon-apigateway-api-key-source": "AUTHORIZER",
+    "paths": {        
+        "/pet/{petId}": {
+                "options": {
+                    "parameters": [
+                        {
+                            "name": "petId",
+                            "in": "path",
+                            "description": "Pet identifier.",
+                            "required": true,
+                            "style": "simple",
+                            "schema": {
+                                "type": "integer",
+                                "format": "int64"
+                            },
+                            "example": 110002167
+                        }
+                        
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "200 response",
+                            "headers": {
+                                "Access-Control-Allow-Origin": {
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                },
+                                "Access-Control-Allow-Methods": {
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                },
+                                "Access-Control-Allow-Headers": {
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "content": {}
+                        }
+                    },
+                    "x-amazon-apigateway-integration": {
+                        "responses": {
+                            "default": {
+                                "statusCode": "200",
+                                "responseParameters": {
+                                    "method.response.header.Access-Control-Allow-Methods": "'*'",
+                                    "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                    "method.response.header.Access-Control-Allow-Origin": "'*'"
+                                }
+                            }
+                        },
+                        "requestTemplates": {
+                            "application/json": "{\"statusCode\": 200}"
+                        },
+                        "passthroughBehavior": "when_no_match",
+                        "type": "mock"
+                    }
+                },
+                "get": {
+                    "tags": [
+                        "Operations"
+                    ],
+                    "summary": "Return a single pet",
+                    "description": "Return a single pet",
+                    "operationId": "petFind",
+                    "parameters": [
+                        {
+                            "name": "petId",
+                            "in": "path",
+                            "description": "Pet identifier.",
+                            "required": true,
+                            "style": "simple",
+                            "schema": {
+                                "type": "integer",
+                                "format": "int64"
+                            },
+                            "example": 110002167
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Succesful pet find.",
+                            "headers": {
+                                "Access-Control-Allow-Origin": {
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/Pet"
+                                    }
+                                }
+                            }
+                        },
+                        "204": {
+                            "description": "Not content.",
+                            "headers": {
+                                "Access-Control-Allow-Origin": {
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                            
+                        },
+                        "403": {
+                            "description": "Forbidden.",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/Error"
+                                    },
+                                    "example": {
+                                        "message": "Forbidden"
+                                    }
+                                }
+                            }
+                        },
+                        "401": {
+                            "description": "Unauthorized.",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/Error"
+                                    },
+                                    "example": {
+                                        "message": "Unauthorized"
+                                    }
+                                }
+                            }
+                        },
+                        "400": {
+                            "description": "Bad Request.",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/Error"
+                                    }
+                                }
+                            }
+                        },
+                        "500": {
+                            "description": "Internal Server Error.",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/Error"
+                                    },
+                                    "example": {
+                                        "message": "Internal Server Error"
+                                    }
+                                }
+                            }
+                        },
+                        "404": {
+                            "description": "Not Found.",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/Error"
+                                    },
+                                    "example": {
+                                        "message": "Not Found"
+                                    }
+                                }
+                            }
+                        }
+                        
+                    },
+                    "security": [
+                        {
+                            "cognito-integration-authorizer": [
+                                "pilot-api/pet.find"
+                            ]
+                        }
+                    ],
+                    "x-amazon-apigateway-integration": {
+                        "responses": {
+                            "default": {
+                                "statusCode": "200",
+                                "responseParameters": {
+                                    "method.response.header.Access-Control-Allow-Origin": "'*'"
+                                }
+                            }
+                        },
+                        "uri": "",
+                        "passthroughBehavior": "when_no_match",
+                        "httpMethod": "POST",
+                        "type": "aws_proxy"
+                    },
+                    "x-amazon-apigateway-request-validator": "params-only"
+                },
+                "delete": {
+                    "tags": [
+                        "Operations"
+                    ],
+                    "summary": "Delete a pet",
+                    "description": "Delete a pet",
+                    "operationId": "petDelete",
+                    "parameters": [
+                        {
+                            "name": "petId",
+                            "in": "path",
+                            "description": "Pet identifier.",
+                            "required": true,
+                            "style": "simple",
+                            "schema": {
+                                "type": "integer",
+                                "format": "int64"
+                            },
+                            "example": 110002167
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Succesful pet delete.",
+                            "headers": {
+                                "Access-Control-Allow-Origin": {
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },                    
+                        "403": {
+                            "description": "Forbidden.",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/Error"
+                                    },
+                                    "example": {
+                                        "message": "Forbidden"
+                                    }
+                                }
+                            }
+                        },
+                        "401": {
+                            "description": "Unauthorized.",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/Error"
+                                    },
+                                    "example": {
+                                        "message": "Unauthorized"
+                                    }
+                                }
+                            }
+                        },
+                        "400": {
+                            "description": "Bad Request.",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/Error"
+                                    }
+                                }
+                            }
+                        },
+                        "500": {
+                            "description": "Internal Server Error.",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/Error"
+                                    },
+                                    "example": {
+                                        "message": "Internal Server Error"
+                                    }
+                                }
+                            }
+                        },
+                        "404": {
+                            "description": "Not Found.",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/Error"
+                                    },
+                                    "example": {
+                                        "message": "Not Found"
+                                    }
+                                }
+                            }
+                        },
+                        "498": {
+                            "description": "pet not found.",
+                            "headers": {
+                                "Access-Control-Allow-Origin": {
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                        
+                    },
+                    "security": [
+                        {
+                            "cognito-integration-authorizer": [
+                                "pilot-api/delete.pet"
+                            ]
+                        }
+                    ],
+                    "x-amazon-apigateway-integration": {
+                        "responses": {
+                            "default": {
+                                "statusCode": "200",
+                                "responseParameters": {
+                                    "method.response.header.Access-Control-Allow-Origin": "'*'"
+                                }
+                            }
+                        },
+                        "uri": "",
+                        "passthroughBehavior": "when_no_match",
+                        "httpMethod": "POST",
+                        "type": "aws_proxy"
+                    },
+                    "x-amazon-apigateway-request-validator": "params-only"
+                }
+            },
+        "/pet": {
+            "options": {            
+                "responses": {
+                    "200": {
+                        "description": "200 response",
+                        "headers": {
+                            "Access-Control-Allow-Origin": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "Access-Control-Allow-Methods": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "Access-Control-Allow-Headers": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "content": {}
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "responses": {
+                        "default": {
+                            "statusCode": "200",
+                            "responseParameters": {
+                                "method.response.header.Access-Control-Allow-Methods": "'*'",
+                                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                "method.response.header.Access-Control-Allow-Origin": "'*'"
+                            }
+                        }
+                    },
+                    "requestTemplates": {
+                        "application/json": "{\"statusCode\": 200}"
+                    },
+                    "passthroughBehavior": "when_no_match",
+                    "type": "mock"
+                }
+            },
+            "post": {
+                "tags": [
+                    "Operations"
+                ],
+                "summary": "Add a new pet",
+                "description": "Add a new pet",
+                "operationId": "Add a new pet",                
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Pet"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Create new Pet.",
+                        "headers": {
+                            "Access-Control-Allow-Origin": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "example": {
+                                    "message": "Forbidden"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "example": {
+                                    "message": "Unauthorized"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "example": {
+                                    "message": "Internal Server Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "example": {
+                                    "message": "Not Found"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "cognito-integration-authorizer": [
+                            "pilot-api/new.pet"
+                        ]
+                    }
+                ],
+                "x-amazon-apigateway-integration": {
+                    "responses": {
+                        "default": {
+                            "statusCode": "200",
+                            "responseParameters": {
+                                "method.response.header.Access-Control-Allow-Origin": "'*'"
+                            }
+                        }
+                    },
+                    "uri": "",
+                    "passthroughBehavior": "when_no_match",
+                    "httpMethod": "POST",
+                    "type": "aws_proxy"
+                },
+                "x-amazon-apigateway-request-validator": "all"
+            }
+        }
+                
+    },
+    "components": {
+        "schemas": {
+            "Pet":{
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Pet identifier.",
+                        "format":"int64",
+                        "example": 123
+                    },
+                    "name": {
+                        "maxLength": 50,
+                        "minLength": 0,
+                        "type": "string",
+                        "description": "Pet name.",
+                        "example": "spaniel breton"
+                    },
+                    "category":{
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "description": "Category identifier.",
+                                "format":"int64",
+                                "example": 123
+                            },
+                            "name": {
+                                "maxLength": 50,
+                                "minLength": 0,
+                                "type": "string",
+                                "description": "Category name.",
+                                "example": "dog"
+
+                            }
+                        }
+                    },
+                    "age": {
+                        "type": "number",
+                        "description": "Pet age.",
+                        "format":"float",
+                        "example": 0.3
+                    }
+                }    
+            },
+            "Error": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "Error description."
+                    }
+                }
+            }
+            
+        },
+        "securitySchemes": {
+            "cognito-integration-authorizer": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header",
+                "x-amazon-apigateway-authtype": "cognito_user_pools",
+                "x-amazon-apigateway-authorizer": {
+                    "type": "cognito_user_pools",
+                    "providerARNs": [
+                        ""
+                    ]
+                }
+            }
+        }
+        
+    }
+}

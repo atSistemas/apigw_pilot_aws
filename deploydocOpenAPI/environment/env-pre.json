@@ -1,0 +1,5 @@
+{
+    "tokenUrl": "https://api-pilot.auth.eu-west-1.amazoncognito.com/oauth2/token",
+    "region": "eu-west-1",
+    "stageName": "api_pilot-web"
+}

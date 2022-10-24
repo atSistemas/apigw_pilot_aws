@@ -1,0 +1,55 @@
+service: deploydocopenapipilot
+plugins:
+  - serverless-s3-sync
+frameworkVersion: '2 || 3'
+
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: 20201221
+  region: eu-west-1
+  stage: ${opt:stage}
+  environment:
+    NAME_BUCKET: pilot-${opt:stage, self:provider.stage}-api
+
+custom:
+  siteName: ${self:provider.environment.NAME_BUCKET}
+  
+  s3Sync:
+    - bucketName: ${self:provider.environment.NAME_BUCKET}
+      localDir: static
+
+resources:
+  Resources:
+    StaticSite:
+      Type: AWS::S3::Bucket
+      Properties:
+        AccessControl: PublicRead
+        BucketName: ${self:provider.environment.NAME_BUCKET}
+        WebsiteConfiguration:
+          IndexDocument: index.html
+        CorsConfiguration:
+          CorsRules:
+            - AllowedOrigins:
+                - "http://*"
+                - "https://*"
+              AllowedHeaders:
+                - "*"
+              AllowedMethods:
+                - GET
+              MaxAge: 3000
+    StaticSiteS3BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: StaticSite
+        PolicyDocument:
+          Statement:
+            - Sid: PublicReadGetObject
+              Effect: Allow
+              Principal: "*"
+              Action:
+                - s3:GetObject
+              Resource:
+                Fn::Join: ["", ["arn:aws:s3:::", { "Ref": "StaticSite" }, "/*"]]      

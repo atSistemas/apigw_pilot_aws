@@ -1,0 +1,59 @@
+service: api-pilot
+
+frameworkVersion: '2 || 3'
+
+plugins:    
+  - serverless-prune-plugin
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: 20201221
+  memorySize: 128
+  timeout: 16
+  region: eu-west-1
+  stage: ${opt:stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+      Resource: "*"
+    - Effect: Allow
+      Action:
+        - cognito-idp:describeUserPoolClient
+      Resource: !Sub "arn:aws:cognito-idp:${opt:region,self:provider.region}:${aws:accountId}:*"
+            
+  environment:
+    myStage: ${self:provider.stage}
+
+functions:
+  management:
+    handler: src/handler.pilot
+    description: Management Operation Pilot.    
+    environment:
+      USER_POOL_ID: ${self:custom.file.USER_POOL_ID}
+  create:  
+    handler: src/services/createpet.create
+    description: Create pet.   
+  delete:  
+    handler: src/services/deletepet.delete
+    description: delete pet.   
+  get:  
+    handler: src/services/getpet.get
+    description: get pet.     
+    
+custom:
+  file: ${file(./environment/.env.${self:provider.stage}.yml)}  
+  prune:
+    automatic: true
+    includeLayers: true
+    number: 3
+
+package:
+  exclude:
+    - script/**
+    - .gitignore
+    - .env*
+    - .yarnrc.yml
+    - yarn.lock
+    - test/**    
