@@ -11,7 +11,7 @@ provider:
   region: eu-west-1
   stage: ${opt:stage}
   environment:
-    NAME_BUCKET: pilot-${opt:stage, self:provider.stage}-api
+    NAME_BUCKET: api-${opt:stage, self:provider.stage}-pilot
 
 custom:
   siteName: ${self:provider.environment.NAME_BUCKET}

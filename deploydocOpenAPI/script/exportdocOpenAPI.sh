@@ -48,7 +48,7 @@ echo "4. Se procede a recoger el identificador del api publicado en AWS"
 
 titleAPI=$(jq '.info.title' static/openAPIPilot-$1-tmp.json)
 echo "titulo del API: $titleAPI"
-aws apigateway get-rest-apis --profile ama-$1 --region $region > tmp/apigateway-restapi-$1-tmp.json        
+aws apigateway get-rest-apis --profile pilot-$1 --region $region > tmp/apigateway-restapi-$1-tmp.json        
 api=$(jq '.items[]  | select(.name == "API Pilot") | .id' tmp/apigateway-restapi-$1-tmp.json)
 apiId=$(echo "$api" | tr -d '"')   
 urlEndpoint="https://$apiId.execute-api.eu-west-1.amazonaws.com/$stage"

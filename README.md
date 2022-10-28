@@ -58,4 +58,4 @@ The root level directory initializes a serverless project to allow for publishin
   - lambdaRouter: Name of the router lambda to which all API input requests will be delegated and which will be hooked up with the API Gateway service for our API.
   - stageName: Name of the stage used to publish our API.
   - resourceServerName: Name of the server resource used in Cognito.
-  - url: Url on which the API will be published. 
+  - tokenUrl: Url to create cognito token auth to operation api. 

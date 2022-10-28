@@ -1,8 +1,7 @@
 {
-    "userPoolId": "eu-west-1_7oPPGqhIO",
+    "userPoolId": "eu-west-1_7pKZtFdQ3",
     "region": "eu-west-1",
     "lambdaRouter": "api-pilot-pre-management",
-    "stageName": "maip_api_pilot-web",
-    "resourceServerName": "pilot-api",
-    "url": "https://omerdf8te0.execute-api.eu-west-1.amazonaws.com/api_pilot-web"
+    "stageName": "api_pilot-web",
+    "resourceServerName": "pilot-api"    
 }
